@@ -1,0 +1,381 @@
+# Default values for roc-platform-app.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: icr.io/rls-release/conga.platform.postupgrade.worker
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+# image pull secret name for image registries
+imagePullSecrets:
+  - name: rls-dockerconfigsecret
+
+# app name and selectors
+nameOverride: "platform-post-upgrade-worker"
+fullnameOverride: "platform-post-upgrade-worker"
+
+extraEnvs:
+  - name: 'FeatureFlagSdkKey'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: FEATURE_FLAG_SDK_KEY
+  - name: 'DataGroupList1'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: DATA_GROUP_LIST_1
+  - name: 'DataConfig__DataStorageProvider__AccessKey'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: AWS_ACCESS_KEY
+  - name: 'DataConfig__DataStorageProvider__SecretKey'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: AWS_ACCESS_SECRET
+  - name: 'DataConfig__DataStorageProvider__ServiceURL'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: AWS_S3_ENDPOINT_GLOBAL
+  - name: 'DataConfig__BlobStorageProvider__AccessKey'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: AWS_ACCESS_KEY
+  - name: 'DataConfig__BlobStorageProvider__SecretKey'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: AWS_ACCESS_SECRET
+  - name: 'DataConfig__BlobStorageProvider__ServiceURL'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: AWS_S3_ENDPOINT_GLOBAL
+  - name: 'PlatformCacheConfig__ConnectionString'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: PLAT_REDIS_CONNECTION
+  - name: 'DataCacheConfig__ConnectionString'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: APP_REDIS_CONNECTION
+  - name: 'PubSubConfig__ConnectionString'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: PUBSUB_REDIS_CONNECTION
+  - name: OTEL_AGENT_HOST
+    valueFrom:
+      fieldRef:
+        fieldPath: status.hostIP
+  - name: 'MessageProvider__Credentials__AccessKey'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: AWS_ACCESS_KEY
+  - name: 'MessageProvider__Credentials__SecretKey'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: AWS_ACCESS_SECRET
+  - name: 'MessageProvider__Endpoints__TopicEndpoint'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: AWS_SNS_ENDPOINT
+  - name: 'MessageProvider__Endpoints__QueueEndpoint'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: AWS_SQS_ENDPOINT
+  - name: 'MessageProvider__Endpoints__SecurityTokenEndpoint'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: AWS_STS_ENDPOINT
+  - name: 'JwtBearerOptions__Authority'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: JWT_BEARER_AUTHORITY_URL
+  - name: 'JwtBearerOptions__MetadataAddress'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: JWT_BEARER_METADATA_ADDRESS_URL
+  - name: 'PubSubConfig__Enabled'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: ENABLE_PUBSUB_REDIS_STREAM
+  - name: 'UpgradeFramworkMessageProvider__Credentials__AccessKey'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: AWS_ACCESS_KEY
+  - name: 'UpgradeFramworkMessageProvider__Credentials__SecretKey'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: AWS_ACCESS_SECRET
+  - name: 'UpgradeFramworkMessageProvider__Endpoints__TopicEndpoint'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: AWS_SNS_ENDPOINT_GLOBAL
+  - name: 'UpgradeFramworkMessageProvider__Endpoints__QueueEndpoint'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: AWS_SQS_ENDPOINT
+  - name: 'UpgradeFramworkMessageProvider__Endpoints__SecurityTokenEndpoint'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: AWS_STS_ENDPOINT
+  - name: 'CustomerManagementMessageProvider__Credentials__AccessKey'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: AWS_ACCESS_KEY
+  - name: 'CustomerManagementMessageProvider__Credentials__SecretKey'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: AWS_ACCESS_SECRET
+  - name: 'CustomerManagementMessageProvider__Endpoints__TopicEndpoint'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: AWS_SNS_ENDPOINT_GLOBAL
+  - name: 'CustomerManagementMessageProvider__Endpoints__QueueEndpoint'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: AWS_SQS_ENDPOINT   
+  - name: 'CustomerManagementMessageProvider__Endpoints__SecurityTokenEndpoint'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: AWS_STS_ENDPOINT
+  - name: 'UpgradeFrameworkMessageProvider__Credentials__AccessKey'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: AWS_ACCESS_KEY
+  - name: 'UpgradeFrameworkMessageProvider__Credentials__SecretKey'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: AWS_ACCESS_SECRET
+  - name: 'UpgradeFrameworkMessageProvider__Endpoints__TopicEndpoint'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: AWS_SNS_ENDPOINT
+  - name: 'UpgradeFrameworkMessageProvider__Endpoints__QueueEndpoint'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: AWS_SQS_ENDPOINT     
+  - name: 'UpgradeFrameworkMessageProvider__Endpoints__SecurityTokenEndpoint'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: AWS_STS_ENDPOINT 
+  - name: 'ClusterCommunicationClientSettings__SSGCommunicationBaseURL'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: SSG_COMMUNICATION_API_BASE_URL
+  - name: 'ClusterCommunicationClientSettings__TokenGeneration__TokenUrl'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: COMMUNICATION_API_AUTH_TOKEN_URL
+  - name: 'ClusterCommunicationClientSettings__TokenGeneration__ClientId'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: COMMUNICATION_API_CLIENT_ID
+  - name: 'ClusterCommunicationClientSettings__TokenGeneration__ClientSecret'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: COMMUNICATION_API_CLIENT_SECRET  
+  - name: 'SchedulerConfig__AccessKey'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: AWS_ACCESS_KEY
+  - name: 'SchedulerConfig__SecretKey'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: AWS_ACCESS_SECRET
+  - name: 'SchedulerConfig__ServiceURL'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: AWS_SCHEDULER_ENDPOINT
+  - name: 'SchedulerConfig__RoleName'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: SCHEDULER_ROLE_NAME
+  - name: 'TenancyClientSettings__TenancyServiceEndpoint'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: TENANCYSERVICE_API_ENDPOINT
+  - name: 'TenancyClientSettings__TokenGeneration__TokenUrl'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: TENANCYSERVICE_API_AUTH_TOKEN_URL
+  - name: 'TenancyClientSettings__TokenGeneration__ClientId'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: TENANCYSERVICE_API_CLIENT_ID
+  - name: 'TenancyClientSettings__TokenGeneration__ClientSecret'
+    valueFrom:
+      secretKeyRef:
+        name: rls-doppler-secret
+        key: TENANCYSERVICE_API_CLIENT_SECRET
+
+# secrets to be mounted as a local file
+secretMounts: []
+  # - secretName: rls-doppler-secret
+  #   path: /app/configoverride/appsettings.json
+  #   subPath: appsettings.json # subpath is optional
+  #   key: PLATFORM_SECRET
+
+configMaps:
+  - configmapName: rls-platform-appsettings-configmap
+    path: /app/configoverride/appsettings.json
+    subPath: appsettings.json # subpath is optional
+    key: appsettings.json
+
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations:
+  secrets.doppler.com/reload: 'true'
+  reloader.stakater.com/auto: "true"
+
+  
+otelLabels:
+  deployment.environment: ""
+  service.namespace: platform
+  product: platform
+
+podSecurityContext: 
+  fsGroup: 1001
+
+securityContext: 
+  runAsUser: 1001
+  runAsGroup: 1001
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  enabled: false
+
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  limits:
+    memory: 2Gi
+  requests:
+    cpu: 500m
+    memory: 2Gi
+
+livenessProbe: {}
+readinessProbe: {}
+
+
+autoscaling:
+  enabled: false
+  minReplicas: 5
+  maxReplicas: 50
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+#This should be enabled if we want to do autoscaling based on Queue length
+keda:
+  enabled: true
+  dopplerSecret: rls-doppler-secret
+  pollingInterval: 3                 # Time in seconds after which it will check the msgs in the queue
+  cooldownPeriod: 300                 # Wait 5 minutes after the last time KEDA checked the queue and it was empty
+  minReplicas: 1                      # Minimum no. of replicas of the service
+  maxReplicas: 10                     # Maximum no. of replicas of the service
+  queueRegion: "<siteGroupConfig.regionCode>"
+  accountId: "<envConfig.accountId>"
+  sitegroupId: "<envConfig.envCode>-<siteGroupConfig.siteGroupId>"
+  triggerType: "aws-sqs-queue"
+  triggers:
+    - queueName: "platform-postschema-upgrade-queue"
+      queueLength: "25"      
+
+nodeSelector: 
+  type: worker
+
+nodeAffinity: 
+  enabled: true
+  spotLabels:
+    key: workload
+    value: 
+    - spot
+  ondemandLabels:
+    key: workload
+    value: 
+    - ondemand
+
+tolerations: []
+
+affinity: {}
+
+lifecycle:
+  preStop:
+    exec:
+     command: ["/bin/sh", "-c", "sleep 12"]
+
+terminationGracePeriodSeconds: "300"
+
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 25%
+    maxUnavailable: 25%
+
+rbacRole:
+  enabled: true
+  resources: ["configmaps","secrets"]
+  resourceNames:
+   - rls-platform-appsettings-configmap
+   - rls-doppler-secret
+   - rls-dockerconfigsecret
